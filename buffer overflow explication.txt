@@ -1,0 +1,46 @@
+buffer
+
+1. send un bad input pour trouver l'index ou on tombe en segmentation fault
+
+./infotel au lieu de infotel pour utiliser le programme que tu fais avec ton makefile
+
+2. ouvrir dans khexedit
+
+3. noter offset du dernier character
+dans infotel.c, injecter la variable qu'on veut a la ligne 
+
+4.afficher la ligne: "system(cmd);" on veut envoyer un parametre supplementaire qui va return un shell, (en fesant "which sh" on peut voir l'adresse du shell qui devrait etre /bin/sh)
+
+5. On veut entrer /bin/sh a la fin de notre bad_input pour ouvrir un le shell.
+
+6. on fait un objdump --source infotel | less
+
+7. on va chercher la commande system(cmd) et on prend la commande hex de la commande movl (a gauche de la ligne)
+
+8. On veut ajouter cette adresse a notre bad_input mais on doit ecrire laddresse en commencant par les derniers bytes
+
+-si cela a fonctionner, on devrait voir quand on run infotel avec bad_input que ya un sh: aaaaa qui est apparu avant le segmentation fault
+
+9. A partir de ce moment, on veut garder l'adresse a cet endroit, et on veut modifier le bad_input dans hexedit avec insert a on pour trouver ou notre commande sh debute (le /bin/sh/) apres, on veut mettre des espaces jusqu'a 1098.
+
+10. avec le shell, on va copier ce quil y a dans le /etc/shadow/ dans notre vm
+
+11. on efface tout le users et on garde seulement comptabl.
+
+12. on va aller dans tmp/shadow_crack/ et ouvrir mini-crack. On va editer le mini-crack.c pour aller attacker comptabl. On va donc changer les parametres de la fonction pour mettre recherche et salt.
+
+13. Modifier fichier caracteres pour mettre chaque caractere possible
+
+14. executer mini-crack en mettant comme parametre -sh ../../shadow -xc caracteres -dict mots_de_passe -xl 3
+
+(ca depend ou le shadow file copier est dans l'ordi)
+
+
+15. Un coup quon a le mdp de comptabl, on peut se connect avec scp pour aller chercher les fichiers du comptabl
+
+
+
+
+
+
+Quand notre payload fonctionne, on l'injecte dans le infotel du systeme.
